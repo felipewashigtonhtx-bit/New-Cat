@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cat Social Enrichment | League City Animal Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #662D91;
+    --blue: #2CA5E0;
+    --green: #8CC63F;
+    --orange: #F37A20;
+    --white: #ffffff;
+    --glass-bg: rgba(255,255,255,0.18);
+    --glass-border: rgba(255,255,255,0.45);
+    --glass-shadow: 0 8px 32px rgba(102,45,145,0.18), 0 1.5px 8px rgba(44,165,224,0.10);
+    --glass-blur: blur(22px) saturate(1.6);
+    --radius: 28px;
+    --radius-sm: 16px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Questrial', sans-serif;
+    background: linear-gradient(135deg, #e8d5f5 0%, #d0eeff 35%, #e2f5c0 65%, #ffe4cc 100%);
+    min-height: 100vh;
+    color: #2d1a40;
+    overflow-x: hidden;
+  }
+
+  /* Animated background orbs */
+  .bg-orbs {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .orb {
+    position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.35;
+    animation: drift 18s ease-in-out infinite alternate;
+  }
+  .orb-1 { width: 520px; height: 520px; background: var(--purple); top: -100px; left: -100px; animation-duration: 20s; }
+  .orb-2 { width: 420px; height: 420px; background: var(--blue); top: 40%; right: -80px; animation-duration: 16s; animation-delay: -5s; }
+  .orb-3 { width: 360px; height: 360px; background: var(--green); bottom: -60px; left: 30%; animation-duration: 22s; animation-delay: -10s; }
+  .orb-4 { width: 300px; height: 300px; background: var(--orange); top: 60%; left: 10%; animation-duration: 14s; animation-delay: -3s; }
+  @keyframes drift {
+    0% { transform: translate(0,0) scale(1); }
+    100% { transform: translate(40px, 30px) scale(1.08); }
+  }
+
+  /* Glass mixin */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1.5px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.6);
+    border-radius: var(--radius);
+  }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 12px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: blur(28px) saturate(1.8);
+    -webkit-backdrop-filter: blur(28px) saturate(1.8);
+    border-bottom: 1.5px solid rgba(255,255,255,0.5);
+    box-shadow: 0 2px 24px rgba(102,45,145,0.10);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 12px; }
+  .nav-logo img { height: 48px; width: auto; }
+  .nav-logo span { font-size: 1.05rem; font-weight: 400; color: var(--purple); letter-spacing: 0.01em; }
+  .nav-links { display: flex; gap: 6px; flex-wrap: wrap; }
+  .nav-links a {
+    padding: 7px 15px; border-radius: 50px; font-size: 0.82rem;
+    text-decoration: none; color: var(--purple);
+    background: rgba(255,255,255,0.3);
+    border: 1px solid rgba(255,255,255,0.5);
+    transition: all 0.25s;
+    white-space: nowrap;
+  }
+  .nav-links a:hover {
+    background: var(--purple); color: white;
+    box-shadow: 0 4px 16px rgba(102,45,145,0.3);
+    transform: translateY(-1px);
+  }
+
+  main { position: relative; z-index: 1; padding-top: 80px; }
+
+  /* ───── HERO ───── */
+  .hero {
+    min-height: 92vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 60px 24px 40px;
+  }
+  .hero-card {
+    max-width: 780px; padding: 56px 56px 48px;
+    background: rgba(255,255,255,0.28);
+    backdrop-filter: blur(32px) saturate(1.8);
+    -webkit-backdrop-filter: blur(32px) saturate(1.8);
+    border: 2px solid rgba(255,255,255,0.65);
+    box-shadow: 0 24px 80px rgba(102,45,145,0.18), inset 0 1.5px 0 rgba(255,255,255,0.8);
+    border-radius: 40px;
+    animation: heroIn 0.9s cubic-bezier(.22,1,.36,1) both;
+  }
+  @keyframes heroIn {
+    from { opacity:0; transform: translateY(40px) scale(0.96); }
+    to { opacity:1; transform: none; }
+  }
+  .hero-logo { width: 160px; height: auto; margin-bottom: 28px; filter: drop-shadow(0 8px 24px rgba(102,45,145,0.22)); }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.1;
+    background: linear-gradient(135deg, var(--purple) 0%, var(--blue) 60%, var(--green) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 12px;
+  }
+  .hero-sub {
+    font-size: 1.25rem; color: #5a3a7a; margin-bottom: 32px; line-height: 1.5;
+  }
+  .hero-goal {
+    display: inline-block; padding: 16px 32px; border-radius: 50px;
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    color: white; font-size: 1.05rem;
+    box-shadow: 0 8px 32px rgba(102,45,145,0.35), inset 0 1px 0 rgba(255,255,255,0.25);
+    border: 1.5px solid rgba(255,255,255,0.3);
+  }
+  .hero-cats { font-size: 2.4rem; margin-bottom: 20px; }
+  .scroll-hint {
+    margin-top: 48px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--purple); opacity: 0.6; font-size: 0.85rem;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+
+  /* ───── SECTION LAYOUT ───── */
+  section { padding: 80px 24px; max-width: 1200px; margin: 0 auto; }
+  .section-header { text-align: center; margin-bottom: 48px; }
+  .section-label {
+    display: inline-block; padding: 6px 20px; border-radius: 50px; font-size: 0.78rem;
+    text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .label-purple { background: rgba(102,45,145,0.12); color: var(--purple); border: 1px solid rgba(102,45,145,0.2); }
+  .label-blue { background: rgba(44,165,224,0.12); color: #1a8cbf; border: 1px solid rgba(44,165,224,0.2); }
+  .label-green { background: rgba(140,198,63,0.15); color: #5a8a1f; border: 1px solid rgba(140,198,63,0.25); }
+  .label-orange { background: rgba(243,122,32,0.12); color: #c05c0a; border: 1px solid rgba(243,122,32,0.2); }
+  h2.section-title {
+    font-size: clamp(1.7rem, 4vw, 2.5rem); line-height: 1.15;
+    color: #2d1a40; margin-bottom: 12px;
+  }
+  .section-desc { font-size: 1.05rem; color: #5a3a7a; max-width: 600px; margin: 0 auto; line-height: 1.65; }
+
+  /* ───── ENRICHMENT INTRO ───── */
+  .enrichment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media(max-width:700px){ .enrichment-grid{ grid-template-columns:1fr; } }
+
+  .info-card {
+    padding: 32px 28px; border-radius: var(--radius);
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1.5px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.55);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .info-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(102,45,145,0.2), inset 0 1px 0 rgba(255,255,255,0.55); }
+  .info-card h3 { font-size: 1.25rem; margin-bottom: 16px; color: #2d1a40; display: flex; align-items: center; gap: 10px; }
+  .info-card ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .info-card li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.95rem; color: #4a2d6a; line-height: 1.5; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .dot-purple { background: var(--purple); }
+  .dot-blue { background: var(--blue); }
+  .dot-green { background: var(--green); }
+  .dot-orange { background: var(--orange); }
+
+  .needs-card { border-top: 4px solid var(--purple); }
+  .benefits-card { border-top: 4px solid var(--green); }
+  .behaviors-card { grid-column: span 2; border-top: 4px solid var(--blue); }
+  @media(max-width:700px){ .behaviors-card{ grid-column: span 1; } }
+  .behaviors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 8px; }
+  @media(max-width:700px){ .behaviors-grid{ grid-template-columns: repeat(2,1fr); } }
+  .behavior-pill {
+    padding: 10px 16px; border-radius: 12px; text-align: center; font-size: 0.9rem;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    color: white; font-weight: 400;
+  }
+
+  /* ───── IMPORTANT RULES ───── */
+  .rules-section { background: none; }
+  .rule-alert {
+    padding: 36px 40px; border-radius: var(--radius);
+    background: linear-gradient(135deg, rgba(102,45,145,0.18), rgba(243,122,32,0.12));
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 2px solid rgba(243,122,32,0.35);
+    box-shadow: 0 12px 40px rgba(243,122,32,0.15), inset 0 1px 0 rgba(255,255,255,0.5);
+    margin-bottom: 32px; display: flex; gap: 24px; align-items: flex-start;
+  }
+  .rule-icon { font-size: 2.8rem; flex-shrink: 0; }
+  .rule-alert h3 { font-size: 1.35rem; color: #c05c0a; margin-bottom: 10px; }
+  .rule-alert p { font-size: 0.97rem; color: #4a2d6a; line-height: 1.65; }
+  .rule-reasons { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 20px; }
+  @media(max-width:700px){ .rule-reasons{ grid-template-columns:1fr; } }
+  .reason-pill {
+    padding: 14px 18px; border-radius: 14px; font-size: 0.88rem;
+    background: rgba(255,255,255,0.35); border: 1px solid rgba(255,255,255,0.5);
+    color: #4a2d6a; display: flex; gap: 10px; align-items: flex-start;
+  }
+
+  .play-areas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media(max-width:700px){ .play-areas-grid{ grid-template-columns:1fr; } }
+  .area-card {
+    padding: 32px; border-radius: var(--radius);
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1.5px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.55);
+    text-align: center;
+  }
+  .area-emoji { font-size: 3rem; margin-bottom: 16px; }
+  .area-card h3 { font-size: 1.2rem; color: #2d1a40; margin-bottom: 12px; }
+  .area-features { display: flex; flex-direction: column; gap: 8px; text-align: left; margin-top: 16px; }
+  .area-feature { display: flex; gap: 10px; align-items: center; font-size: 0.9rem; color: #4a2d6a; }
+
+  /* ───── ELIGIBILITY ───── */
+  .eligibility-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; }
+  @media(max-width:700px){ .eligibility-grid{ grid-template-columns:1fr; } }
+  .elig-item {
+    display: flex; gap: 16px; align-items: center; padding: 20px 24px;
+    border-radius: 18px; background: rgba(255,255,255,0.28);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(255,255,255,0.5);
+    box-shadow: 0 4px 20px rgba(102,45,145,0.1), inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+  .elig-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .elig-text { font-size: 0.95rem; color: #3d2060; line-height: 1.5; }
+  .elig-text strong { color: var(--purple); display: block; margin-bottom: 2px; }
+
+  /* ───── FAS SCALE ───── */
+  .fas-tabs { display: flex; gap: 12px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
+  .fas-tab {
+    padding: 12px 28px; border-radius: 50px; font-size: 1rem; cursor: pointer;
+    border: 2px solid transparent; transition: all 0.25s; font-family: 'Questrial', sans-serif;
+    position: relative; overflow: hidden;
+  }
+  .fas-tab::before {
+    content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity 0.25s;
+    background: rgba(255,255,255,0.2);
+  }
+  .fas-tab:hover::before { opacity: 1; }
+  .tab-green { background: rgba(140,198,63,0.2); color: #4a7a0a; border-color: rgba(140,198,63,0.4); }
+  .tab-green.active { background: var(--green); color: white; border-color: var(--green); box-shadow: 0 8px 24px rgba(140,198,63,0.4); }
+  .tab-yellow { background: rgba(255,200,0,0.2); color: #8a6a00; border-color: rgba(255,200,0,0.4); }
+  .tab-yellow.active { background: #f0b800; color: white; border-color: #f0b800; box-shadow: 0 8px 24px rgba(240,184,0,0.4); }
+  .tab-red { background: rgba(220,60,60,0.15); color: #8a1a1a; border-color: rgba(220,60,60,0.3); }
+  .tab-red.active { background: #e03030; color: white; border-color: #e03030; box-shadow: 0 8px 24px rgba(220,60,60,0.4); }
+
+  .fas-panel { display: none; animation: fadeSlide 0.4s ease both; }
+  .fas-panel.active { display: block; }
+  @keyframes fadeSlide { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+
+  .fas-content {
+    padding: 40px; border-radius: var(--radius);
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1.5px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.55);
+  }
+  .fas-content.green-accent { border-top: 5px solid var(--green); }
+  .fas-content.yellow-accent { border-top: 5px solid #f0b800; }
+  .fas-content.red-accent { border-top: 5px solid #e03030; }
+
+  .fas-header { display: flex; gap: 20px; align-items: center; margin-bottom: 28px; }
+  .fas-emoji { font-size: 3rem; }
+  .fas-header h3 { font-size: 1.5rem; color: #2d1a40; }
+  .fas-header p { font-size: 0.95rem; color: #5a3a7a; margin-top: 4px; }
+
+  .signs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .sign-pill {
+    padding: 12px 16px; border-radius: 14px; font-size: 0.9rem; color: #3d2060;
+    background: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.6);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .action-box {
+    padding: 20px 24px; border-radius: 16px; margin-top: 8px;
+    font-size: 0.95rem; line-height: 1.7;
+  }
+  .action-box.green-box { background: rgba(140,198,63,0.12); border: 1.5px solid rgba(140,198,63,0.3); color: #3d6010; }
+  .action-box.yellow-box { background: rgba(240,184,0,0.1); border: 1.5px solid rgba(240,184,0,0.3); color: #6a5000; }
+  .action-box.red-box { background: rgba(220,60,60,0.1); border: 1.5px solid rgba(220,60,60,0.25); color: #6a1010; }
+
+  /* ───── PERSONALITIES ───── */
+  .personality-tabs { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px; }
+  .pers-tab {
+    padding: 10px 22px; border-radius: 50px; cursor: pointer; font-size: 0.95rem;
+    font-family: 'Questrial', sans-serif; transition: all 0.25s;
+    background: rgba(255,255,255,0.3); border: 1.5px solid rgba(255,255,255,0.5);
+    color: #4a2d6a;
+  }
+  .pers-tab:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,45,145,0.15); }
+  .pers-tab.active { color: white; transform: translateY(-2px); }
+  .pers-tab.p-player.active { background: var(--orange); border-color: var(--orange); box-shadow: 0 8px 24px rgba(243,122,32,0.4); }
+  .pers-tab.p-attention.active { background: var(--purple); border-color: var(--purple); box-shadow: 0 8px 24px rgba(102,45,145,0.4); }
+  .pers-tab.p-shy.active { background: var(--blue); border-color: var(--blue); box-shadow: 0 8px 24px rgba(44,165,224,0.4); }
+
+  .pers-panel { display: none; animation: fadeSlide 0.4s ease both; }
+  .pers-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media(max-width:700px){ .pers-panel.active{ grid-template-columns:1fr; } }
+
+  .pers-card {
+    padding: 32px; border-radius: var(--radius);
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1.5px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.55);
+  }
+  .pers-card h3 { font-size: 1.15rem; color: #2d1a40; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .pers-card ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .pers-card li { display: flex; gap: 10px; align-items: flex-start; font-size: 0.93rem; color: #4a2d6a; line-height: 1.5; }
+  .check { color: var(--green); font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+  .play-tip {
+    padding: 16px 20px; border-radius: 14px; font-size: 0.9rem; color: #4a2d6a;
+    background: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.6);
+    margin-top: 16px; line-height: 1.6;
+  }
+  .play-tip strong { color: var(--orange); }
+
+  /* ───── HANDLING ───── */
+  .handling-steps { display: flex; flex-direction: column; gap: 20px; }
+  .step-card {
+    display: flex; gap: 24px; padding: 28px 32px; border-radius: 20px;
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1.5px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.55);
+    align-items: flex-start; transition: transform 0.25s;
+  }
+  .step-card:hover { transform: translateX(6px); }
+  .step-num {
+    width: 48px; height: 48px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; font-size: 1.2rem;
+    color: white; flex-shrink: 0; font-weight: 400;
+  }
+  .step-card h3 { font-size: 1.05rem; color: #2d1a40; margin-bottom: 6px; }
+  .step-card p { font-size: 0.93rem; color: #5a3a7a; line-height: 1.6; }
+  .handling-rules-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; margin-top: 32px; }
+  @media(max-width:700px){ .handling-rules-grid{ grid-template-columns:1fr; } }
+  .handle-rule {
+    padding: 18px 22px; border-radius: 16px; display: flex; gap: 14px; align-items: flex-start;
+    background: rgba(255,255,255,0.3); border: 1.5px solid rgba(255,255,255,0.5);
+    box-shadow: 0 4px 16px rgba(102,45,145,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+  .handle-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .handle-rule p { font-size: 0.9rem; color: #4a2d6a; line-height: 1.5; }
+
+  /* ───── GROUP PLAY ───── */
+  .group-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  @media(max-width:800px){ .group-grid{ grid-template-columns:1fr; } }
+  .group-card {
+    padding: 28px; border-radius: var(--radius);
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1.5px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.55);
+  }
+  .group-card h3 { font-size: 1.05rem; color: #2d1a40; margin-bottom: 14px; display: flex; gap: 10px; align-items: center; }
+  .age-group {
+    padding: 12px 16px; border-radius: 12px; font-size: 0.88rem; color: #4a2d6a;
+    background: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.6);
+    margin-bottom: 8px; display: flex; align-items: center; gap: 10px;
+  }
+  .limit-badge {
+    display: inline-block; padding: 8px 18px; border-radius: 50px; font-size: 1.1rem;
+    font-weight: 400; color: white; margin-bottom: 8px;
+  }
+  .watch-for { display: flex; flex-direction: column; gap: 10px; }
+  .watch-item { display: flex; gap: 10px; align-items: flex-start; font-size: 0.9rem; color: #4a2d6a; line-height: 1.5; }
+  .ok { color: var(--green); }
+  .stop { color: #e03030; }
+
+  /* ───── CLEANING ───── */
+  .cleaning-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media(max-width:700px){ .cleaning-grid{ grid-template-columns:1fr; } }
+  .clean-step {
+    padding: 20px 24px; border-radius: 16px; display: flex; gap: 16px;
+    background: rgba(255,255,255,0.28); border: 1.5px solid rgba(255,255,255,0.5);
+    box-shadow: 0 4px 16px rgba(44,165,224,0.1), inset 0 1px 0 rgba(255,255,255,0.6);
+    transition: transform 0.25s;
+  }
+  .clean-step:hover { transform: translateY(-3px); }
+  .step-badge {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;
+    background: var(--blue);
+  }
+  .clean-step h4 { font-size: 1rem; color: #1a6a8a; margin-bottom: 4px; }
+  .clean-step p { font-size: 0.88rem; color: #4a2d6a; line-height: 1.5; }
+  .time-card {
+    padding: 28px 32px; border-radius: var(--radius); margin-top: 28px;
+    background: linear-gradient(135deg, rgba(44,165,224,0.15), rgba(140,198,63,0.12));
+    border: 1.5px solid rgba(44,165,224,0.25);
+    box-shadow: 0 8px 32px rgba(44,165,224,0.12), inset 0 1px 0 rgba(255,255,255,0.5);
+    display: flex; gap: 20px; align-items: flex-start;
+  }
+  .time-icon { font-size: 2.5rem; }
+  .time-card h3 { font-size: 1.15rem; color: #1a6a8a; margin-bottom: 8px; }
+  .time-card p { font-size: 0.95rem; color: #4a2d6a; line-height: 1.6; }
+
+  /* ───── DO'S AND DON'TS ───── */
+  .dos-donts { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  @media(max-width:700px){ .dos-donts{ grid-template-columns:1fr; } }
+  .do-card, .dont-card {
+    padding: 36px; border-radius: var(--radius);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.55);
+  }
+  .do-card {
+    background: rgba(140,198,63,0.12); border: 2px solid rgba(140,198,63,0.3);
+  }
+  .dont-card {
+    background: rgba(220,60,60,0.08); border: 2px solid rgba(220,60,60,0.2);
+  }
+  .do-card h3 { color: #4a7a0a; font-size: 1.4rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .dont-card h3 { color: #8a1a1a; font-size: 1.4rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .do-item, .dont-item {
+    display: flex; gap: 14px; align-items: flex-start; padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.4); font-size: 0.95rem; line-height: 1.5;
+  }
+  .do-item:last-child, .dont-item:last-child { border-bottom: none; }
+  .do-item { color: #3a5a0a; }
+  .dont-item { color: #6a1a1a; }
+  .do-icon { color: var(--green); font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .dont-icon { color: #e03030; font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
+  /* ───── HYGIENE ───── */
+  .hygiene-card {
+    padding: 36px 40px; border-radius: var(--radius); margin-bottom: 32px;
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1.5px solid var(--glass-border);
+    border-left: 5px solid var(--blue);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.55);
+  }
+  .hygiene-card h3 { font-size: 1.2rem; color: #1a6a8a; margin-bottom: 16px; display: flex; gap: 10px; align-items: center; }
+  .towel-rules { display: flex; flex-direction: column; gap: 10px; }
+  .towel-rule { display: flex; gap: 12px; align-items: center; font-size: 0.95rem; color: #4a2d6a; }
+
+  /* ───── FINAL ───── */
+  .final-section {
+    text-align: center; padding: 100px 24px;
+    max-width: 900px; margin: 0 auto;
+  }
+  .final-card {
+    padding: 64px 56px; border-radius: 48px;
+    background: linear-gradient(135deg, rgba(102,45,145,0.22), rgba(44,165,224,0.16), rgba(140,198,63,0.12));
+    backdrop-filter: blur(40px) saturate(2); -webkit-backdrop-filter: blur(40px) saturate(2);
+    border: 2px solid rgba(255,255,255,0.55);
+    box-shadow: 0 32px 100px rgba(102,45,145,0.2), inset 0 2px 0 rgba(255,255,255,0.7);
+  }
+  .final-emoji { font-size: 4rem; margin-bottom: 24px; }
+  .final-card h2 { font-size: 2rem; color: #2d1a40; margin-bottom: 16px; }
+  .final-card p { font-size: 1.05rem; color: #5a3a7a; line-height: 1.7; max-width: 560px; margin: 0 auto 32px; }
+  .final-impacts { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 12px; }
+  .impact-pill {
+    padding: 12px 22px; border-radius: 50px; font-size: 0.9rem; color: white;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  }
+
+  /* ───── QUICK REF FLOATING BTN ───── */
+  .fab {
+    position: fixed; bottom: 28px; right: 28px; z-index: 200;
+    width: 60px; height: 60px; border-radius: 50%; border: none; cursor: pointer;
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    color: white; font-size: 1.5rem;
+    box-shadow: 0 8px 28px rgba(102,45,145,0.4), 0 2px 8px rgba(44,165,224,0.3), inset 0 1px 0 rgba(255,255,255,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fab:hover { transform: scale(1.1); box-shadow: 0 12px 36px rgba(102,45,145,0.5); }
+
+  .quick-modal {
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(30,10,50,0.45); backdrop-filter: blur(8px);
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .quick-modal.open { display: flex; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .quick-inner {
+    max-width: 640px; width: 100%; max-height: 85vh; overflow-y: auto;
+    padding: 40px; border-radius: 32px;
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(40px) saturate(2); -webkit-backdrop-filter: blur(40px) saturate(2);
+    border: 2px solid rgba(255,255,255,0.75);
+    box-shadow: 0 32px 100px rgba(102,45,145,0.3), inset 0 2px 0 rgba(255,255,255,0.9);
+  }
+  .quick-inner h2 { font-size: 1.5rem; color: #2d1a40; margin-bottom: 24px; text-align: center; }
+  .close-btn {
+    float: right; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #5a3a7a;
+    padding: 4px 8px; border-radius: 8px;
+  }
+  .close-btn:hover { background: rgba(102,45,145,0.1); }
+  .qr-section { margin-bottom: 20px; }
+  .qr-section h3 { font-size: 1rem; color: #4a2d6a; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1.5px solid rgba(102,45,145,0.15); }
+  .qr-row { display: flex; gap: 8px; align-items: flex-start; padding: 8px 0; font-size: 0.9rem; color: #4a2d6a; }
+  .qr-ok { color: var(--green); }
+  .qr-no { color: #e03030; }
+
+  /* Divider */
+  .section-divider { width: 80px; height: 4px; border-radius: 2px; margin: 0 auto 48px; background: linear-gradient(90deg, var(--purple), var(--blue)); }
+
+  /* Section alternation */
+  section:nth-child(even) { background: none; }
+
+  /* Responsive nav */
+  @media(max-width:900px) {
+    .nav-links { display: none; }
+    .hero-card { padding: 40px 28px; }
+    .rule-alert { flex-direction: column; gap: 16px; }
+    .time-card { flex-direction: column; }
+  }
+
+  /* Stress watch card */
+  .stress-card {
+    padding: 28px 32px; border-radius: var(--radius); margin-top: 24px;
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    border: 1.5px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.55);
+  }
+  .stress-card h3 { font-size: 1.1rem; color: #2d1a40; margin-bottom: 16px; }
+  .stress-types { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+  @media(max-width:700px){ .stress-types{ grid-template-columns:1fr; } }
+  .stress-type { padding: 18px; border-radius: 14px; text-align: center; font-size: 0.88rem; color: #4a2d6a; }
+</style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <span>Cat Social Enrichment</span>
+  </div>
+  <div class="nav-links">
+    <a href="#enrichment">Enrichment</a>
+    <a href="#rules">Rules</a>
+    <a href="#fas">FAS Scale</a>
+    <a href="#personalities">Personalities</a>
+    <a href="#handling">Handling</a>
+    <a href="#group">Group Play</a>
+    <a href="#cleaning">Cleaning</a>
+    <a href="#dosdonts">Do's & Don'ts</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-card">
+      <div class="hero-cats">🐱 🐾 🏠</div>
+      <h1>Volunteer Guide to Cat Social Enrichment</h1>
+      <p class="hero-sub">Your time, patience, and kindness help cats relax, build confidence, and show their true personalities to potential adopters.</p>
+      <div class="hero-goal">🎯 Our Goal: Every interaction should make the cat feel safer, calmer, and happier.</div>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll to explore</span>
+      <span style="font-size:1.4rem;">↓</span>
+    </div>
+  </div>
+
+  <!-- WHAT IS ENRICHMENT -->
+  <section id="enrichment">
+    <div class="section-header">
+      <span class="section-label label-purple">The Basics</span>
+      <h2 class="section-title">What Is Cat Social Enrichment?</h2>
+      <p class="section-desc">Social enrichment means giving cats activities and interactions that improve their mental and emotional health. Cats need more than food, water, and a clean kennel.</p>
+    </div>
+    <div class="section-divider"></div>
+    <div class="enrichment-grid">
+      <div class="info-card needs-card">
+        <h3>🐾 What Cats Need</h3>
+        <ul>
+          <li><span class="dot dot-purple"></span>Exercise to stay physically healthy</li>
+          <li><span class="dot dot-blue"></span>Mental stimulation to stay sharp</li>
+          <li><span class="dot dot-green"></span>Exploration of their environment</li>
+          <li><span class="dot dot-orange"></span>Positive human interaction and trust building</li>
+          <li><span class="dot dot-purple"></span>Opportunities to play and hunt naturally</li>
+        </ul>
+      </div>
+      <div class="info-card benefits-card">
+        <h3>✨ When Cats Get Enrichment</h3>
+        <ul>
+          <li><span class="dot dot-green"></span>They feel significantly less stressed</li>
+          <li><span class="dot dot-green"></span>They stay physically and mentally healthier</li>
+          <li><span class="dot dot-green"></span>They show their true personality to adopters</li>
+          <li><span class="dot dot-green"></span>They become more adoptable — faster!</li>
+          <li><span class="dot dot-purple"></span>Even sitting quietly with a cat can be enriching</li>
+        </ul>
+      </div>
+      <div class="info-card behaviors-card">
+        <h3>🌿 Natural Feline Behaviors We Help Express</h3>
+        <div class="behaviors-grid">
+          <div class="behavior-pill" style="background: var(--purple);">🐾 Hunting</div>
+          <div class="behavior-pill" style="background: var(--blue);">🔍 Exploring</div>
+          <div class="behavior-pill" style="background: var(--green);">🧗 Climbing</div>
+          <div class="behavior-pill" style="background: var(--orange);">✂️ Scratching</div>
+          <div class="behavior-pill" style="background: var(--purple);">🎾 Playing</div>
+          <div class="behavior-pill" style="background: var(--blue);">😴 Resting Safely</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RULES -->
+  <section id="rules">
+    <div class="section-header">
+      <span class="section-label label-orange">Safety First</span>
+      <h2 class="section-title">Important Rules & Approved Play Areas</h2>
+      <p class="section-desc">Following these rules keeps all cats safe, healthy, and comfortable during their stay.</p>
+    </div>
+    <div class="section-divider"></div>
+
+    <div class="rule-alert">
+      <div class="rule-icon">🚨</div>
+      <div>
+        <h3>VERY IMPORTANT: Cats Should NEVER Free Roam the Cat Adoption Area</h3>
+        <p>This rule exists for critical reasons. Please read and remember all three:</p>
+        <div class="rule-reasons">
+          <div class="reason-pill"><span>🚪</span><div><strong>Escape Risk</strong><br>If a door opens while a cat is loose, they could escape the building.</div></div>
+          <div class="reason-pill"><span>🦠</span><div><strong>Disease Prevention</strong><br>Cats near other kennels can spread germs or illness to other animals.</div></div>
+          <div class="reason-pill"><span>😰</span><div><strong>Stress Reduction</strong><br>Cats in kennels may become stressed when another cat runs past them.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="play-areas-grid">
+      <div class="area-card glass">
+        <div class="area-emoji">🚪</div>
+        <h3>The Meet & Greet Room</h3>
+        <p style="font-size:0.9rem; color:#5a3a7a;">An enclosed space designed for safe, comfortable cat interaction time.</p>
+        <div class="area-features">
+          <div class="area-feature"><span style="color:var(--green)">✓</span> Safe, enclosed environment</div>
+          <div class="area-feature"><span style="color:var(--green)">✓</span> Hiding spaces for comfort</div>
+          <div class="area-feature"><span style="color:var(--green)">✓</span> Toys and enrichment items</div>
+          <div class="area-feature" style="color: var(--orange); font-size:0.85rem;"><span>📋</span> Only cats who arrived together</div>
+        </div>
+      </div>
+      <div class="area-card glass">
+        <div class="area-emoji">🌿</div>
+        <h3>The Catio</h3>
+        <p style="font-size:0.9rem; color:#5a3a7a;">An outdoor-style space that gives cats room to explore and feel the fresh air.</p>
+        <div class="area-features">
+          <div class="area-feature"><span style="color:var(--green)">✓</span> More room to explore</div>
+          <div class="area-feature"><span style="color:var(--green)">✓</span> Places to climb and perch</div>
+          <div class="area-feature"><span style="color:var(--green)">✓</span> Natural enrichment environment</div>
+          <div class="area-feature" style="color: var(--blue); font-size:0.85rem;"><span>📋</span> Maximum 4 cats at once</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ELIGIBILITY -->
+  <section id="eligibility">
+    <div class="section-header">
+      <span class="section-label label-green">Before You Begin</span>
+      <h2 class="section-title">When Are Cats Eligible for Free Play?</h2>
+      <p class="section-desc">Not every cat is ready for free play immediately. Cats must meet all of these requirements before participating.</p>
+    </div>
+    <div class="section-divider"></div>
+    <div class="eligibility-grid">
+      <div class="elig-item">
+        <div class="elig-icon">📅</div>
+        <div class="elig-text">
+          <strong>At Least 3 Days in Shelter</strong>
+          The cat must have had time to adjust to their new environment. Kittens may sometimes adjust faster.
+        </div>
+      </div>
+      <div class="elig-item">
+        <div class="elig-icon">💊</div>
+        <div class="elig-text">
+          <strong>No Signs of Contagious Illness</strong>
+          The cat must be healthy and show no symptoms that could spread to other animals.
+        </div>
+      </div>
+      <div class="elig-item">
+        <div class="elig-icon">🩹</div>
+        <div class="elig-text">
+          <strong>No Recent Surgery (48 hrs)</strong>
+          Cats must not have undergone surgery within the last 48 hours for their safety.
+        </div>
+      </div>
+      <div class="elig-item">
+        <div class="elig-icon">😌</div>
+        <div class="elig-text">
+          <strong>Relaxed Body Language</strong>
+          The cat should show signs of comfort, not fear or high stress, before free play.
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:24px; padding:20px 28px; border-radius:16px; background:rgba(44,165,224,0.12); border: 1.5px solid rgba(44,165,224,0.25); color: #1a6a8a; font-size:0.95rem; text-align:center;">
+      💡 <strong>If you ever feel unsure — ask staff before moving a cat!</strong>
+    </div>
+  </section>
+
+  <!-- FAS SCALE -->
+  <section id="fas">
+    <div class="section-header">
+      <span class="section-label label-blue">Body Language</span>
+      <h2 class="section-title">Understanding Cat Body Language</h2>
+      <p class="section-desc">Before interacting with a cat, always watch their body language. We use the Fear, Anxiety, and Stress (FAS) Scale to understand how a cat is feeling.</p>
+    </div>
+    <div class="section-divider"></div>
+
+    <div class="fas-tabs">
+      <button class="fas-tab tab-green active" onclick="switchFAS('green', this)">🟢 Green — Relaxed & Happy</button>
+      <button class="fas-tab tab-yellow" onclick="switchFAS('yellow', this)">🟡 Yellow — Mild Stress</button>
+      <button class="fas-tab tab-red" onclick="switchFAS('red', this)">🔴 Red — High Stress</button>
+    </div>
+
+    <div id="fas-green" class="fas-panel active">
+      <div class="fas-content green-accent">
+        <div class="fas-header">
+          <div class="fas-emoji">😻</div>
+          <div>
+            <h3>Green — Relaxed and Happy</h3>
+            <p>This cat is comfortable and open to interaction. Great for play or cuddles!</p>
+          </div>
+        </div>
+        <div class="signs-grid">
+          <div class="sign-pill">👁️ Soft, relaxed eyes</div>
+          <div class="sign-pill">🐈 Tail up in a relaxed curve</div>
+          <div class="sign-pill">👂 Ears facing forward</div>
+          <div class="sign-pill">😸 Purring</div>
+          <div class="sign-pill">🚶 Approaching you willingly</div>
+          <div class="sign-pill">🐾 Kneading with paws</div>
+        </div>
+        <div class="action-box green-box">
+          ✅ <strong>What to do:</strong> These cats are usually great candidates for play sessions or cuddle time! Let the cat guide the interaction — they'll show you what they enjoy. Begin with offering your hand for a sniff, then follow their lead.
+        </div>
+      </div>
+    </div>
+
+    <div id="fas-yellow" class="fas-panel">
+      <div class="fas-content yellow-accent">
+        <div class="fas-header">
+          <div class="fas-emoji">😟</div>
+          <div>
+            <h3>Yellow — Mild Stress</h3>
+            <p>This cat is starting to feel unsure. Slow down and give them more space.</p>
+          </div>
+        </div>
+        <div class="signs-grid">
+          <div class="sign-pill">😤 Furrowed brow</div>
+          <div class="sign-pill">👂 Ears turned sideways</div>
+          <div class="sign-pill">🐈 Tail wrapped tight around body</div>
+          <div class="sign-pill">👀 Watching you carefully</div>
+          <div class="sign-pill">💪 Slight body tension</div>
+          <div class="sign-pill">🔄 Pulling away slightly</div>
+        </div>
+        <div class="action-box yellow-box">
+          ⚠️ <strong>What to do:</strong>
+          <br>→ Slow down your movements
+          <br>→ Give the cat more personal space
+          <br>→ Let the cat choose whether to interact — don't force it
+          <br>→ Consider ending the session and trying again later
+        </div>
+      </div>
+    </div>
+
+    <div id="fas-red" class="fas-panel">
+      <div class="fas-content red-accent">
+        <div class="fas-header">
+          <div class="fas-emoji">😾</div>
+          <div>
+            <h3>Red — High Stress</h3>
+            <p>This cat is scared and needs space immediately. Stop interaction now.</p>
+          </div>
+        </div>
+        <div class="signs-grid">
+          <div class="sign-pill">😡 Hissing</div>
+          <div class="sign-pill">🔊 Growling</div>
+          <div class="sign-pill">🐾 Swatting at you</div>
+          <div class="sign-pill">👂 Flattened ears against head</div>
+          <div class="sign-pill">⬇️ Body pressed low to ground</div>
+          <div class="sign-pill">🚪 Attempting to escape</div>
+        </div>
+        <div class="action-box red-box">
+          🚨 <strong>Stop interaction immediately.</strong> Give the cat plenty of time and space to calm down. Do not return until the cat has had a full break and is showing calmer signals. Report to staff if stress signs persist. Never punish or try to "push through" red signals.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERSONALITIES -->
+  <section id="personalities">
+    <div class="section-header">
+      <span class="section-label label-orange">Every Cat is Unique</span>
+      <h2 class="section-title">Different Cat Personalities</h2>
+      <p class="section-desc">Just like people, cats all have different personalities and preferences. Always let the cat decide what type of enrichment they want!</p>
+    </div>
+    <div class="section-divider"></div>
+
+    <div class="personality-tabs">
+      <button class="pers-tab p-player active" onclick="switchPers('player', this)">🎾 The Player</button>
+      <button class="pers-tab p-attention" onclick="switchPers('attention', this)">💜 The Attention Seeker</button>
+      <button class="pers-tab p-shy" onclick="switchPers('shy', this)">🫧 The "Space Please" Cat</button>
+    </div>
+
+    <div id="pers-player" class="pers-panel active">
+      <div class="pers-card" style="border-top: 4px solid var(--orange);">
+        <h3>🎾 Favorite Toys</h3>
+        <ul>
+          <li><span class="check">✓</span> Wand toys that mimic prey movement</li>
+          <li><span class="check">✓</span> Toy mice and small stuffed animals</li>
+          <li><span class="check">✓</span> String and feather toys</li>
+          <li><span class="check">✓</span> Balls that roll and bounce</li>
+          <li><span class="check">✓</span> Noisy or textured toys for stimulation</li>
+        </ul>
+      </div>
+      <div class="pers-card" style="border-top: 4px solid var(--orange);">
+        <h3>⏱️ Play Session Tips</h3>
+        <ul>
+          <li><span class="check">✓</span> Keep sessions <strong>10–15 minutes</strong> long — cats are sprinters!</li>
+          <li><span class="check">✓</span> Move the toy <em>away</em> from the cat like prey escaping</li>
+          <li><span class="check">✓</span> Change speeds to mimic real prey movement</li>
+          <li><span class="check">✓</span> Hide toys behind objects to spark curiosity</li>
+          <li><span class="check">✓</span> Let the cat <em>catch</em> the toy sometimes</li>
+          <li><span class="check">✓</span> Slow down near the end to help the cat cool down</li>
+        </ul>
+        <div class="play-tip"><strong>🏆 Pro Tip:</strong> Always allow the toy to "lose" at the end so the cat feels successful and satisfied from the hunt!</div>
+      </div>
+    </div>
+
+    <div id="pers-attention" class="pers-panel">
+      <div class="pers-card" style="border-top: 4px solid var(--purple);">
+        <h3>💜 What They Love</h3>
+        <ul>
+          <li><span class="check">✓</span> Gentle petting and physical affection</li>
+          <li><span class="check">✓</span> Brushing sessions</li>
+          <li><span class="check">✓</span> Soft talking and being spoken to</li>
+          <li><span class="check">✓</span> Sitting on laps with a clean towel</li>
+          <li><span class="check">✓</span> Head scratches and chin rubs</li>
+        </ul>
+      </div>
+      <div class="pers-card" style="border-top: 4px solid var(--purple);">
+        <h3>😻 Signs They're Enjoying It</h3>
+        <ul>
+          <li><span class="check">✓</span> Purring loudly and continuously</li>
+          <li><span class="check">✓</span> Leaning into your hand for more</li>
+          <li><span class="check">✓</span> Kneading with their paws (making biscuits!)</li>
+          <li><span class="check">✓</span> Licking your hand as a sign of affection</li>
+          <li><span class="check">✓</span> Slow blinking at you (a cat's "I love you")</li>
+        </ul>
+        <div class="play-tip"><strong>🧺 Remember:</strong> Always place a clean towel over your lap and shirt when cuddling — one towel per cat, and a fresh one each time!</div>
+      </div>
+    </div>
+
+    <div id="pers-shy" class="pers-panel">
+      <div class="pers-card" style="border-top: 4px solid var(--blue);">
+        <h3>🫧 What They Prefer</h3>
+        <ul>
+          <li><span class="check">✓</span> Quiet, calm environments</li>
+          <li><span class="check">✓</span> Very slow, non-threatening movements</li>
+          <li><span class="check">✓</span> Sitting nearby without touching at first</li>
+          <li><span class="check">✓</span> Gentle, soft talking</li>
+          <li><span class="check">✓</span> High-value treats to build trust slowly</li>
+        </ul>
+      </div>
+      <div class="pers-card" style="border-top: 4px solid var(--blue);">
+        <h3>🌱 Helping Fearful Cats</h3>
+        <ul>
+          <li><span class="check">✓</span> Move slowly and deliberately always</li>
+          <li><span class="check">✓</span> Speak softly — calm tones help</li>
+          <li><span class="check">✓</span> <strong>Avoid direct eye contact</strong> — it can feel threatening</li>
+          <li><span class="check">✓</span> Keep interactions very short — 2 to 3 minutes</li>
+          <li><span class="check">✓</span> Offer treats to gradually build trust over time</li>
+        </ul>
+        <div class="play-tip" style="border-color: rgba(44,165,224,0.3); background: rgba(44,165,224,0.08);">
+          <strong style="color:var(--blue);">⏳ Patience is everything.</strong> Fearful cats may take days or even weeks to feel safe — every small step forward matters enormously!
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HANDLING -->
+  <section id="handling">
+    <div class="section-header">
+      <span class="section-label label-purple">Safe Handling</span>
+      <h2 class="section-title">How to Safely Handle a Cat</h2>
+      <p class="section-desc">Proper handling keeps both you and the cat safe. Always follow these steps when removing a cat from their kennel.</p>
+    </div>
+    <div class="section-divider"></div>
+
+    <div class="handling-steps">
+      <div class="step-card">
+        <div class="step-num" style="background: var(--purple);">1</div>
+        <div>
+          <h3>Offer Your Finger First</h3>
+          <p>Let the cat sniff your finger through or near the kennel door before attempting to open it. This lets them learn your scent and decide if they're comfortable before you make any moves.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num" style="background: var(--blue);">2</div>
+        <div>
+          <h3>Read Their Body Language</h3>
+          <p>Watch for FAS signals carefully. The cat should show relaxed or mildly curious body language before you proceed. If they show yellow or red signals, wait and try again later.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num" style="background: var(--green);">3</div>
+        <div>
+          <h3>Support Their Entire Body</h3>
+          <p>When picking up the cat, support their full weight — including their back legs. Bring them close to your body so they feel secure and stable, not dangling or unsupported.</p>
+        </div>
+      </div>
+      <div class="step-card">
+        <div class="step-num" style="background: var(--orange);">4</div>
+        <div>
+          <h3>Transport Calmly to Play Area</h3>
+          <p>Move slowly and calmly to the designated play area. Keep your face turned away from the cat's mouth and claws. Stay composed — your calm energy helps the cat feel safe.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="handling-rules-grid">
+      <div class="handle-rule"><span class="handle-icon">🦵</span><p><strong>Support the back legs</strong> at all times — unsupported legs create panic</p></div>
+      <div class="handle-rule"><span class="handle-icon">🤗</span><p><strong>Keep the cat close</strong> to your body so they feel secure and grounded</p></div>
+      <div class="handle-rule"><span class="handle-icon">🙅</span><p><strong>Never let the cat dangle</strong> — this causes fear and injury risk</p></div>
+      <div class="handle-rule"><span class="handle-icon">😶</span><p><strong>Keep your face away</strong> from the cat's reach for everyone's safety</p></div>
+    </div>
+
+    <div class="hygiene-card" style="margin-top: 32px;">
+      <h3>🧺 Important Hygiene Rule: Cuddle Towels</h3>
+      <div class="towel-rules">
+        <div class="towel-rule"><span style="color:var(--green)">✓</span> Place a <strong>clean towel</strong> over your lap and shirt before cuddling a cat</div>
+        <div class="towel-rule"><span style="color:var(--green)">✓</span> Use <strong>one towel per cat</strong> — never share between animals</div>
+        <div class="towel-rule"><span style="color:var(--green)">✓</span> Use a <strong>fresh, clean towel</strong> for every individual cat</div>
+        <div class="towel-rule"><span style="color:var(--green)">✓</span> <strong>Sanitize your hands</strong> thoroughly between each cat</div>
+        <div class="towel-rule"><span style="color:var(--blue)">💡</span> You may leave the towel in the cat's kennel afterward — your scent provides comfort!</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GROUP PLAY -->
+  <section id="group">
+    <div class="section-header">
+      <span class="section-label label-green">Social Time</span>
+      <h2 class="section-title">Group Play Guidelines</h2>
+      <p class="section-desc">Some cats may play together — but only under specific conditions. Group play requires careful observation and strict rules.</p>
+    </div>
+    <div class="section-divider"></div>
+
+    <div class="group-grid">
+      <div class="group-card">
+        <h3>📋 Requirements</h3>
+        <div class="age-group"><span style="color:var(--green)">✓</span> Must be 6 months or older</div>
+        <div class="age-group"><span style="color:var(--green)">✓</span> Must be healthy and illness-free</div>
+        <div class="age-group"><span style="color:var(--green)">✓</span> Should be similar age groups</div>
+        <div style="margin-top:16px;">
+          <div class="age-group" style="background:rgba(102,45,145,0.1);">🐱 Juveniles: 6 months – 1 year</div>
+          <div class="age-group" style="background:rgba(44,165,224,0.1);">🐱 Adults: 1+ years</div>
+          <div class="age-group" style="background:rgba(140,198,63,0.1);">🐱 Seniors: 10+ years</div>
+        </div>
+      </div>
+      <div class="group-card">
+        <h3>🏠 Group Size Limits</h3>
+        <div style="text-align:center; margin: 12px 0;">
+          <div class="limit-badge" style="background: var(--green); display:block; margin-bottom:12px;">🌿 Catio: Maximum 4 Cats</div>
+          <div class="limit-badge" style="background: var(--purple); display:block;">🚪 Meet & Greet: Arrived Together Only</div>
+        </div>
+        <p style="font-size:0.88rem; color:#5a3a7a; margin-top:12px; line-height:1.6;">Watch introductions closely for the first 5–10 minutes before stepping back to observe from a distance.</p>
+      </div>
+      <div class="group-card">
+        <h3>👁️ What to Watch For</h3>
+        <div class="watch-for">
+          <div class="watch-item"><span class="ok">✓</span><div><strong>Normal:</strong> Hissing, growling, cautious observation — this is okay and expected.</div></div>
+          <div class="watch-item"><span class="stop">✗</span><div><strong>Stop Play:</strong> Swiping or lunging at each other</div></div>
+          <div class="watch-item"><span class="stop">✗</span><div><strong>Stop Play:</strong> Locking eyes and freezing — escalation is coming</div></div>
+          <div class="watch-item"><span class="stop">✗</span><div><strong>Stop Play:</strong> Any aggressive behavior — calmly remove the newest cat</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLEANING -->
+  <section id="cleaning">
+    <div class="section-header">
+      <span class="section-label label-blue">Sanitation</span>
+      <h2 class="section-title">Cleaning & Sanitation Rules</h2>
+      <p class="section-desc">Cleaning is extremely important in a shelter environment. It prevents the spread of illness between cats. Always clean before AND after each play session.</p>
+    </div>
+    <div class="section-divider"></div>
+
+    <div class="cleaning-grid">
+      <div class="clean-step">
+        <div class="step-badge">1</div>
+        <div>
+          <h4>Remove Bedding & Cloth Items</h4>
+          <p>Take out all fabric, bedding, and cloth items from the play space before cleaning.</p>
+        </div>
+      </div>
+      <div class="clean-step">
+        <div class="step-badge">2</div>
+        <div>
+          <h4>Sweep Away Debris</h4>
+          <p>Sweep away all fur, litter, and debris. Organic material must be fully removed first.</p>
+        </div>
+      </div>
+      <div class="clean-step">
+        <div class="step-badge">3</div>
+        <div>
+          <h4>Clean All Surfaces</h4>
+          <p>Wipe down all surfaces thoroughly, paying attention to corners and frequently touched areas.</p>
+        </div>
+      </div>
+      <div class="clean-step">
+        <div class="step-badge">4</div>
+        <div>
+          <h4>Sanitize with Rescue Disinfectant</h4>
+          <p>Apply properly diluted Rescue disinfectant to sanitize the space completely and safely.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px; padding:24px 32px; border-radius:20px; background:rgba(243,122,32,0.1); border:2px solid rgba(243,122,32,0.25); color:#7a3a0a; font-size:0.95rem; line-height:1.65;">
+      ⚠️ <strong>Critical Rule:</strong> NEVER spray disinfectant over organic material like fur, urine, or feces. You must clean debris FIRST — otherwise the disinfectant will not work properly and cats won't be protected.
+    </div>
+
+    <div class="time-card">
+      <div class="time-icon">⏱️</div>
+      <div>
+        <h3>Play Time Limits</h3>
+        <p>Free play sessions should last <strong>up to 30 minutes</strong>. If a longer session is needed, the room must include litter boxes and water bowls — which must then be removed and sanitized before the next cat uses the room. At the end of your shift, always make sure every single cat is safely back in their kennel.</p>
+      </div>
+    </div>
+
+    <div class="stress-card">
+      <h3>👀 What to Watch During Play</h3>
+      <div class="stress-types">
+        <div class="stress-type" style="background:rgba(102,45,145,0.08); border:1.5px solid rgba(102,45,145,0.2);">
+          <div style="font-size:1.8rem;margin-bottom:8px;">🏃</div>
+          <strong>Active Stress</strong><br><span style="font-size:0.85rem;">Running, swatting, excessive movement</span>
+        </div>
+        <div class="stress-type" style="background:rgba(44,165,224,0.08); border:1.5px solid rgba(44,165,224,0.2);">
+          <div style="font-size:1.8rem;margin-bottom:8px;">🫥</div>
+          <strong>Passive Stress</strong><br><span style="font-size:0.85rem;">Freezing in place or excessive hiding</span>
+        </div>
+        <div class="stress-type" style="background:rgba(140,198,63,0.1); border:1.5px solid rgba(140,198,63,0.25);">
+          <div style="font-size:1.8rem;margin-bottom:8px;">🙈</div>
+          <strong>Normal Hiding</strong><br><span style="font-size:0.85rem;">Brief hiding is okay — excessive is a concern</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DO'S AND DON'TS -->
+  <section id="dosdonts">
+    <div class="section-header">
+      <span class="section-label label-purple">Quick Reference</span>
+      <h2 class="section-title">Do's & Don'ts</h2>
+      <p class="section-desc">Keep these rules in mind every single time you work with cats. When in doubt, always err on the side of caution.</p>
+    </div>
+    <div class="section-divider"></div>
+    <div class="dos-donts">
+      <div class="do-card">
+        <h3>✅ Always DO</h3>
+        <div class="do-item"><span class="do-icon">✓</span> Watch cat body language before and during every interaction</div>
+        <div class="do-item"><span class="do-icon">✓</span> Let the cat choose the type of interaction they want</div>
+        <div class="do-item"><span class="do-icon">✓</span> Keep play sessions short — 10 to 15 minutes maximum</div>
+        <div class="do-item"><span class="do-icon">✓</span> Use clean towels for cuddling — one per cat, always fresh</div>
+        <div class="do-item"><span class="do-icon">✓</span> Sanitize your hands thoroughly between each cat</div>
+        <div class="do-item"><span class="do-icon">✓</span> End sessions calmly and on a positive note</div>
+        <div class="do-item"><span class="do-icon">✓</span> Ask staff whenever you feel unsure about anything</div>
+      </div>
+      <div class="dont-card">
+        <h3>❌ Never DON'T</h3>
+        <div class="dont-item"><span class="dont-icon">✗</span> Let cats roam freely in the cat adoption floor area</div>
+        <div class="dont-item"><span class="dont-icon">✗</span> Force a cat to interact when they don't want to</div>
+        <div class="dont-item"><span class="dont-icon">✗</span> Ignore warning signs like hissing, growling, or swatting</div>
+        <div class="dont-item"><span class="dont-icon">✗</span> Use the same towel between different cats</div>
+        <div class="dont-item"><span class="dont-icon">✗</span> Skip cleaning procedures — even when you're in a hurry</div>
+        <div class="dont-item"><span class="dont-icon">✗</span> Overstimulate cats with sessions that are too long</div>
+        <div class="dont-item"><span class="dont-icon">✗</span> Leave your shift without confirming all cats are kenneled</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <div class="final-section">
+    <div class="final-card">
+      <div class="final-emoji">🐱 ✨ 🏡</div>
+      <h2>Thank You for Making a Difference!</h2>
+      <p>Your time and care make a huge difference in a shelter cat's life. Every interaction — no matter how small — moves them one step closer to finding their forever home.</p>
+      <div class="final-impacts">
+        <div class="impact-pill" style="background: var(--purple);">💜 Reduce Stress</div>
+        <div class="impact-pill" style="background: var(--blue);">💙 Build Trust</div>
+        <div class="impact-pill" style="background: var(--green);">💚 Stay Healthy</div>
+        <div class="impact-pill" style="background: var(--orange);">🧡 Show Personality</div>
+      </div>
+      <p style="margin-top:28px; font-size:1.15rem; color: var(--purple);">Thank you for being an amazing volunteer and helping our cats thrive! 🐱</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- QUICK REFERENCE FAB -->
+<button class="fab" onclick="openQuickRef()" title="Quick Reference Guide">📋</button>
+
+<div class="quick-modal" id="quickModal">
+  <div class="quick-inner">
+    <button class="close-btn" onclick="closeQuickRef()">✕</button>
+    <h2>⚡ Quick Reference Guide</h2>
+
+    <div class="qr-section">
+      <h3>🟢 Green (Relaxed) Signals</h3>
+      <div class="qr-row"><span class="qr-ok">•</span> Soft eyes, tail up, purring, approaching you, kneading</div>
+    </div>
+    <div class="qr-section">
+      <h3>🟡 Yellow (Mild Stress) Signals</h3>
+      <div class="qr-row"><span style="color:#f0b800;">•</span> Furrowed brow, ears sideways, tail wrapped tight, body tension → Slow down, give space</div>
+    </div>
+    <div class="qr-section">
+      <h3>🔴 Red (High Stress) Signals</h3>
+      <div class="qr-row"><span class="qr-no">•</span> Hissing, growling, swatting, flat ears, crouching → STOP immediately</div>
+    </div>
+    <div class="qr-section">
+      <h3>✅ Eligibility Checklist</h3>
+      <div class="qr-row"><span class="qr-ok">✓</span> In shelter 3+ days</div>
+      <div class="qr-row"><span class="qr-ok">✓</span> No illness signs</div>
+      <div class="qr-row"><span class="qr-ok">✓</span> No surgery within 48 hrs</div>
+      <div class="qr-row"><span class="qr-ok">✓</span> Relaxed body language</div>
+    </div>
+    <div class="qr-section">
+      <h3>🏠 Play Areas</h3>
+      <div class="qr-row"><span class="qr-ok">•</span> Meet & Greet Room — cats who arrived together only</div>
+      <div class="qr-row"><span class="qr-ok">•</span> Catio — max 4 cats, 6 months or older, healthy</div>
+    </div>
+    <div class="qr-section">
+      <h3>⏱️ Time Limits</h3>
+      <div class="qr-row"><span class="qr-ok">•</span> Play session: 10–15 min | Free play: up to 30 min</div>
+      <div class="qr-row"><span class="qr-ok">•</span> Fearful cats: 2–3 min interactions</div>
+    </div>
+    <div class="qr-section">
+      <h3>🧺 Hygiene Reminders</h3>
+      <div class="qr-row"><span class="qr-ok">•</span> One clean towel per cat, sanitize hands between each</div>
+      <div class="qr-row"><span class="qr-ok">•</span> Clean debris FIRST, then sanitize with Rescue disinfectant</div>
+    </div>
+    <div class="qr-section">
+      <h3>🚨 Non-Negotiables</h3>
+      <div class="qr-row"><span class="qr-no">✗</span> No free roaming in the cat adoption area — ever</div>
+      <div class="qr-row"><span class="qr-no">✗</span> Never force interaction — always let the cat choose</div>
+      <div class="qr-row"><span class="qr-no">✗</span> All cats kenneled before leaving your shift</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchFAS(color, btn) {
+    document.querySelectorAll('.fas-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.fas-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('fas-' + color).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function switchPers(type, btn) {
+    document.querySelectorAll('.pers-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.pers-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('pers-' + type).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function openQuickRef() {
+    document.getElementById('quickModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeQuickRef() {
+    document.getElementById('quickModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('quickModal').addEventListener('click', function(e) {
+    if (e.target === this) closeQuickRef();
+  });
+
+  // Intersection observer for scroll animations
+  const cards = document.querySelectorAll('.info-card, .step-card, .elig-item, .group-card, .clean-step, .handle-rule');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }, i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  cards.forEach(c => {
+    c.style.opacity = '0';
+    c.style.transform = 'translateY(24px)';
+    c.style.transition = 'opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s';
+    obs.observe(c);
+  });
+</script>
+
+</body>
+</html>
